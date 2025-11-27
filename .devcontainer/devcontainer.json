@@ -1,0 +1,21 @@
+{
+	"name": "Ubuntu",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"features": {
+		"ghcr.io/rocker-org/devcontainer-features/miniforge:2.0.1": {},
+		"ghcr.io/devcontainers/features/sshd:1": {
+			"version": "latest"
+		},
+		"ghcr.io/jungaretti/features/vim:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python"
+			]
+		}
+	},
+	"postCreateCommand": "chmod +x azure/deploy.sh && pip install --upgrade pip && pip install uv poetry"
+}
