@@ -1,0 +1,52 @@
+# This is a Databricks asset bundle definition for demo.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: demo
+  uuid: 67ab8606-67fe-4d11-839e-7b98ca5ff755
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+artifacts:
+  python_artifact:
+    type: whl
+    build: uv build --wheel
+
+# Variable declarations. These variables are assigned in the dev/prod targets below.
+variables:
+  catalog:
+    description: The catalog to use
+  schema:
+    description: The schema to use
+  cluster_id:
+    description: The cluster ID to use for development deployments
+  warehouse_id:
+    description: SQL Warehouse Compute ID
+
+targets:
+  dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-820970000680858.18.azuredatabricks.net
+    variables:
+      catalog: dabdnd01_dbx
+      schema: ${workspace.current_user.short_name}
+    cluster_id: "${var.cluster_id}"
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-820970000680858.18.azuredatabricks.net
+      # We explicitly deploy to /Workspace/Users/adrian.bialy@airlab.me to make sure we only have a single copy.
+      root_path: /Workspace/Users/adrian.bialy@airlab.me/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: dabdnd01_dbx
+      schema: prod
+    permissions:
+      - user_name: adrian.bialy@airlab.me
+        level: CAN_MANAGE

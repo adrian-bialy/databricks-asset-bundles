@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Example Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "demo.main",
+            "args": [
+                "--catalog", "dabdnd01_dbx",
+                "--schema", "adrian_bialy"
+            ],
+            "env": {
+                "DATABRICKS_SERVERLESS_COMPUTE_ID": "auto"
+            }
+        }
+    ]
+}
